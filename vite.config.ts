@@ -39,7 +39,9 @@ export default defineConfig(({ mode }) => {
     server: {
       host: '127.0.0.1',
       proxy: {
-        '/api': { target: env.FLUIG_URL || 'http://localhost:8080', changeOrigin: true, secure: false }
+        '/api': { target: env.FLUIG_URL || 'http://localhost:8080', changeOrigin: true, secure: false },
+        '/style-guide': { target: env.FLUIG_URL || 'http://localhost:8080', changeOrigin: true, secure: false },
+        '/portal/resources': { target: env.FLUIG_URL || 'http://localhost:8080', changeOrigin: true, secure: false }
       }
     },
     // Removido o 'esbuild: { minifyIdentifiers: false }' para habilitar a minificação brutal padrão do Vite
