@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+             http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>br.com.orqflow.wcm.widget</groupId>
+    <artifactId>MyWidget2</artifactId>
+    <version>1.0.0</version>
+    <packaging>war</packaging>
+    <name>MyWidget 2 -- SuperWidget SPA</name>
+    <description>Frontend-only React SPA widget for TOTVS Fluig</description>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <build.version>${project.version}</build.version>
+        <build.revision>SNAPSHOT</build.revision>
+
+        <!-- Fluig Widget Metadata -->
+        <fluig.widget.category>SYSTEM</fluig.widget.category>
+        <fluig.developer.code>ajuevan</fluig.developer.code>
+        <fluig.developer.name>Antonio Juevan</fluig.developer.name>
+        <fluig.developer.url>https://github.com/Juevan</fluig.developer.url>
+    </properties>
+
+    <build>
+        <!-- Injeta build.version e build.revision no application.info -->
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
+
+        <finalName>${project.artifactId}</finalName>
+
+        <plugins>
+            <!-- 1. COMPILADOR E GERENCIADOR DO NODE (FRONTEND) -->
+            <plugin>
+                <groupId>com.github.eirslett</groupId>
+                <artifactId>frontend-maven-plugin</artifactId>
+                <version>1.15.0</version>
+                <executions>
+                    <execution>
+                        <id>install node and npm</id>
+                        <goals><goal>install-node-and-npm</goal></goals>
+                        <configuration>
+                            <nodeVersion>v24.17.0</nodeVersion>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>npm install</id>
+                        <goals><goal>npm</goal></goals>
+                        <configuration>
+                            <arguments>install --no-bin-links</arguments>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>npm run build</id>
+                        <goals><goal>npm</goal></goals>
+                        <configuration>
+                            <arguments>run build</arguments>
+                            <environmentVariables>
+                                <VITE_WIDGET_CODE>${project.artifactId}</VITE_WIDGET_CODE>
+                            </environmentVariables>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!-- CONVERSAO DE ENCODING I18N (.properties UTF-8 para ASCII com unicode escapes) -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>native2ascii-maven-plugin</artifactId>
+                <version>1.0-beta-1</version>
+                <executions>
+                    <execution>
+                        <id>native2ascii-utf8</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>native2ascii</goal>
+                        </goals>
+                        <configuration>
+                            <encoding>UTF8</encoding>
+                            <src>src/main/resources</src>
+                            <dest>${project.build.outputDirectory}</dest>
+                            <includes>
+                                <include>**/*.properties</include>
+                            </includes>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!-- 2. BLINDAGEM E MONTAGEM DO ARQUIVO .WAR -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-war-plugin</artifactId>
+                <version>3.4.0</version>
+                <configuration>
+                    <outputDirectory>${project.basedir}/dist</outputDirectory>
+                    <warSourceDirectory>src/main/webapp</warSourceDirectory>
+                    <webResources>
+                        <resource>
+                            <directory>src/main/webapp</directory>
+                            <filtering>true</filtering>
+                            <includes>
+                                <include>WEB-INF/jboss-web.xml</include>
+                            </includes>
+                        </resource>
+                        <resource>
+                            <directory>${project.build.outputDirectory}</directory>
+                        </resource>
+                    </webResources>
+                    <failOnMissingWebXml>false</failOnMissingWebXml>
+                    <!-- EXCLUSÃO: Impede que o lixo de desenvolvimento polua o pacote final do JBoss -->
+                    <packagingExcludes>
+                        node_modules/**,
+                        src/react/**,
+                        node/**,
+                        package*.json,
+                        tsconfig*.json,
+                        vite.config.ts,
+                        tailwind.config.ts,
+                        postcss.config.js,
+                        .nvmrc,
+                        index.html
+                    </packagingExcludes>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>

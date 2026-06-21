@@ -1,0 +1,22 @@
+application.type=widget
+application.code=${project.artifactId}
+application.title=${project.name}
+application.description=${project.description}
+application.fluig.version=null
+application.category=${fluig.widget.category}
+application.renderer=freemarker
+developer.code=${fluig.developer.code}
+developer.name=${fluig.developer.name}
+developer.url=${fluig.developer.url}
+application.uiwidget=true
+application.mobileapp=true
+application.version=${build.version}-${build.revision}
+view.file=view.ftl
+edit.file=edit.ftl
+locale.file.base.name=widget
+hash=${maven.build.timestamp}
+
+# Resources
+application.resource.js.1=/resources/js/${project.artifactId}.js
+application.resource.css.1=/resources/css/${project.artifactId}.css
+

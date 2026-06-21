@@ -1,0 +1,9 @@
+/* ============================================================
+   Tailwind CSS directives
+   All generated classes will carry the "tw-" prefix defined
+   in tailwind.config.ts (e.g. tw-flex, tw-text-xl, tw-bg-blue-500).
+   preflight is DISABLED — Fluig's Style Guide controls base styles.
+   ============================================================ */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
